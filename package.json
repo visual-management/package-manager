@@ -1,5 +1,5 @@
 {
-  "name": "visual-management",
+  "name": "visual-management-pm",
   "version": "0.0.1",
   "private": true,
   "main": "src/app/manifest.json",
