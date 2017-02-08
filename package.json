@@ -2,7 +2,7 @@
   "name": "visual-management-pm",
   "version": "0.0.1",
   "private": true,
-  "main": "src/app/manifest.json",
+  "main": "./src/app/manifest.js",
   "scripts": {
     "dev": "cross-env NODE_ENV=development webpack-dev-server --open --host 0.0.0.0 --hot",
     "build": "cross-env NODE_ENV=production webpack --progress --hide-modules"
