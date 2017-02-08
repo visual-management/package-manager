@@ -1,7 +1,8 @@
-export default {
+module.exports = {
   plugins: [
     {
-      name: "sonar-plugin"
+      name: "SonarPlugin",
+      path: "sonar-plugin"
     }
   ]
 };

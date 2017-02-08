@@ -8,7 +8,7 @@ Pack management for the visual management project
 To register plugin, add an entry into manifest.js with the following pattern :
 
 ```js
-  export default {
+  {
     plugins: [
       {
         name: "my-new-plugin-folder"
