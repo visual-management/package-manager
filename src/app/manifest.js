@@ -3,6 +3,10 @@ module.exports = {
     {
       name: "SonarPlugin",
       path: "sonar-plugin"
+    },
+    {
+      name: "ClockPlugin",
+      path: "clock-plugin"
     }
   ]
 };
