@@ -1,9 +1,10 @@
 import Clock from "./clock.component.vue"
 
 export default {
-  name      : 'Clock Plugin',
-  id        : 'clock-plugin',
-  components: [
+  name       : 'Clock Plugin',
+  id         : 'clock-plugin',
+  description: `Display a configurable clock`,
+  components : [
     {
       name         : 'Clock',
       tag          : 'clock',

@@ -12,5 +12,7 @@ program
 const list = new List({});
 
 list.getPlugins()
-  .then((plugins) => list.show(plugins))
+  .then((plugins) => {
+    console.log(list.columnify(plugins));
+  })
   .catch((err) => CLI.exitOnError(err));
