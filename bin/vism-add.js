@@ -1,5 +1,4 @@
 const program = require('commander'),
-  debug = require('debug')('vism-add'),
   chalk = require('chalk'),
 
   pkg = require('../package.json'),
@@ -24,9 +23,7 @@ program
 
 cli.init()
   .then(() => {
-    if (!cli.isVisualManagementProject()) {
-      CLI.exitOnError(`You have to be inside a Visual Management project in order to use the ${chalk.green('add')} command.`);
-    }
+    CLI.exitIfNotVisualManagementProject();
 
     if (id === undefined) {
       CLI.exitOnError(`Please provide the ${chalk.green('id')} of the new plugin. See ${chalk.green('vism help add')} for more details.`);

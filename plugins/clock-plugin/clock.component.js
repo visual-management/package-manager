@@ -14,7 +14,7 @@ export default {
       this.datetime = `${this.pad(date.getHours())}:${this.pad(date.getMinutes())}:${this.pad(date.getSeconds())}`;
     },
 
-    pad(n) {
+    pad (n) {
       return n < 9 ? '0' + n : n;
     }
   }

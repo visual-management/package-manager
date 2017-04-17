@@ -2,9 +2,11 @@
   "name": "visual-management-pm",
   "version": "0.0.1",
   "description": "Package manager for the Visual Management plugins",
-  "scripts": {},
   "bin": {
     "vism": "./bin/vism.js"
+  },
+  "scripts": {
+    "lint": "eslint ."
   },
   "license": "MIT",
   "contributors": [
@@ -31,5 +33,7 @@
     "semver": "^5.3.0",
     "winston": "^2.3.1"
   },
-  "devDependencies": {}
+  "devDependencies": {
+    "eslint": "^3.19.0"
+  }
 }
