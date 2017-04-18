@@ -1,4 +1,5 @@
 const program = require('commander'),
+  debug = require('debug')('vism-list'),
 
   pkg = require('../package.json'),
   CLI = require('../lib/cli'),
@@ -15,4 +16,8 @@ Plugin.list()
   .then((plugins) => {
     console.log(list.columnify(plugins)); // eslint-disable-line no-console
   })
-  .catch((err) => CLI.exitOnError(err));
+  .catch((err) => {
+    debug(err);
+
+    CLI.exitOnError(err);
+  });
