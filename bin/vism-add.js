@@ -40,7 +40,7 @@ cli.init()
     return add.start();
   })
   .then(() => {
-    logger.pop(`${chalk.green('success')} Installed "${id}" plugin.`);
+    logger.pop(`${chalk.green('success')} Saved "${id}" plugin.`);
   })
   .catch((err) => {
     debug(err);
