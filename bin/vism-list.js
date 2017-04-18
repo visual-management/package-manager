@@ -1,22 +1,23 @@
-#!/usr/bin/env node
-
 const program = require('commander'),
-  SemVer = require('semver').SemVer,
-  nodeVersion = new SemVer(process.version),
-  logger = require('../vendors/logger'),
-  pkg = require('../package.json');
+  debug = require('debug')('vism-list'),
 
-if (nodeVersion.compare(new SemVer('6.9.0')) < 0) {
-  logger.error(`ERROR: Your running version of Node v${nodeVersion.version}, is not a supported version to use the CLI. The official Node supported version is 6.9 and greater.`);
-
-  process.exit(1);
-}
+  pkg = require('../package.json'),
+  CLI = require('../lib/cli'),
+  Plugin = require('../lib/plugin'),
+  List = require('../lib/commands/list');
 
 program
   .version(pkg.version)
-  .command('add', 'add a new plugin to your visual management')
-  .command('list', 'list available plugins');
+  .parse(process.argv);
 
-// Command.addCommands(program, commands);
+const list = new List({});
 
-program.parse(process.argv);
+Plugin.list()
+  .then((plugins) => {
+    console.log(list.columnify(plugins)); // eslint-disable-line no-console
+  })
+  .catch((err) => {
+    debug(err);
+
+    CLI.exitOnError(err);
+  });

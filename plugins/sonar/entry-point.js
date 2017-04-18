@@ -1,9 +1,11 @@
 import CriticalReporter from "./critical-reporter/critical-reporter.component.vue"
 
 export default {
-  name      : 'Sonar Plugin',
-  id        : 'sonar-plugin',
-  components: [
+  version    : '0.0.1',
+  name       : 'Sonar',
+  id         : 'sonar',
+  description: `List of components for to show SonarQube rules`,
+  components : [
     {
       name         : 'Critical reporter',
       tag          : 'critical-reporter',
