@@ -1,4 +1,4 @@
-import CriticalReporter from "./critical-reporter/critical-reporter.component.vue"
+import CriticalReporter from './critical-reporter/critical-reporter.component.vue'
 
 export default {
   version    : '0.0.1',
@@ -11,6 +11,7 @@ export default {
       tag          : 'critical-reporter',
       vue          : CriticalReporter,
       config       : {
+        host     : '',
         projectId: 0
       },
       defaultWidth : 1,

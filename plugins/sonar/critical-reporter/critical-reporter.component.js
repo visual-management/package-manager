@@ -1,30 +1,35 @@
 import Vue from 'vue';
 import VueResource from 'vue-resource';
+
 Vue.use(VueResource);
 
 export default {
   props: {
     config: {
-      url: String,
+      host: String,
       projectId: Number
     }
   },
+
   computed: {
     url: {
       get() {
-        return this.config.url.replace('{projectId}', this.config.projectId);
+        return `${this.config.host}/sonar/api/resources?resource={projectId}&depth=0&format=json&metrics=critical_violations`.replace('{projectId}', this.config.projectId);
       }
     }
   },
+
   data() {
     return {
       nbViolation: 0
     }
   },
+
   created () {
     this.update();
     setInterval(this.update.bind(this), 60000);
   },
+
   methods: {
     update () {
       this.$http.get(this.url).then((data) => {
