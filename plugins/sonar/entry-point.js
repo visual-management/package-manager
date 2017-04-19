@@ -4,7 +4,7 @@ export default {
   version    : '0.0.1',
   name       : 'Sonar',
   id         : 'sonar',
-  description: `List of components for to show SonarQube rules`,
+  description: `List of components to show SonarQube rules`,
   components : [
     {
       name         : 'Critical reporter',
