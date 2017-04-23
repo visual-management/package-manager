@@ -14,6 +14,10 @@
     "Olivier Le Lay <liollury@gmail.com>",
     "Kevin Grandemange <kevin@kevingrandemange.net>"
   ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ValentinGot/visual-management-pm.git"
+  },
   "engines": {
     "node": ">= 6.9.0",
     "npm": ">= 3.0.0"
