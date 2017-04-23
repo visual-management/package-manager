@@ -9,8 +9,8 @@ export default {
       name         : 'Clock',
       tag          : 'clock',
       vue          : Clock,
-      defaultWidth : 4,
-      defaultHeight: 2
+      defaultWidth : 8,
+      defaultHeight: 4
     }
   ]
 }
