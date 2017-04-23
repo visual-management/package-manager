@@ -1,0 +1,22 @@
+{
+  "name": "vism-plugin-title",
+  "version": "0.0.1",
+  "description": "Display a title",
+  "main": "./entry-point.js",
+  "license": "MIT",
+  "contributors": [
+    "Valentin Got <gotvalentin@gmail.com>",
+    "Olivier Le Lay <liollury@gmail.com>",
+    "Kevin Grandemange <kevin@kevingrandemange.net>"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ValentinGot/visual-management-pm.git"
+  },
+  "dependencies": {
+    "vue-style-loader": "^3.0.0"
+  },
+  "peerDependencies": {
+    "vue": "^2.2.6"
+  }
+}
