@@ -15,8 +15,8 @@ export default {
         violation     : 'blocker',
         updateInterval: 60000
       },
-      defaultWidth : 1,
-      defaultHeight: 1
+      defaultWidth : 2,
+      defaultHeight: 2
     }
   ]
 }
