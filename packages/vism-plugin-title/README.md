@@ -1,22 +1,22 @@
 # vism-plugin-title
 
-> Display a title
+Display a title
 
 ## Configuration
 
-#### title
+### title
 
 `string`, defaults to `A title`
 
 The title to show.
 
-#### classes
+### classes
 
 `array`, defaults to `[]`
 
 Add some classes for adaptable styling.
 
-#### align
+### align
 
 `string`, defaults to `center center`
 
