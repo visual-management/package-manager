@@ -1,4 +1,4 @@
-// import CriticalReporter from './critical-reporter/critical-reporter.component.vue'
+import ViolationReporter from './violation-reporter/violation-reporter.component.vue'
 
 export default {
   id         : 'sonar',
