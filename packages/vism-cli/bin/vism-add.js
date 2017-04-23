@@ -13,14 +13,14 @@ let id;
 
 program
   .version(pkg.version)
-  .arguments('[id]')
+  .arguments('[plugin]')
   .action((idValue) => {
     id = idValue;
   })
   .on('--help', () => {
     logger.help('  Arguments:');
     logger.help('');
-    logger.help(`    [id]           plugin's id, can be found using the ${chalk.blue('vism list')} command`);
+    logger.help(`    [plugin]           plugin name. See list.`);
   })
   .parse(process.argv);
 
@@ -33,7 +33,7 @@ cli.init()
     }
 
     // Create installation folder if not exists
-    Plugin.createPluginsFolder(cli);
+    // Plugin.createPluginsFolder(cli);
 
     const add = new Add(id, {});
 

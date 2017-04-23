@@ -1,20 +1,16 @@
-import Clock from "./clock.component.vue"
+import Clock from './clock.component.vue'
 
 export default {
-  version    : '0.0.1',
-  name       : 'Clock',
   id         : 'clock',
+  name       : 'Clock',
   description: `Display a configurable clock`,
   components : [
     {
       name         : 'Clock',
       tag          : 'clock',
       vue          : Clock,
-      config       : {
-        projectId: 0
-      },
-      defaultWidth : 2,
-      defaultHeight: 1
+      defaultWidth : 4,
+      defaultHeight: 2
     }
   ]
 }

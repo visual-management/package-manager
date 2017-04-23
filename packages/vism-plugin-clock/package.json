@@ -1,0 +1,15 @@
+{
+  "name": "vism-plugin-clock",
+  "version": "0.0.1",
+  "description": "Display a configurable clock",
+  "main": "./entry-point.js",
+  "license": "MIT",
+  "contributors": [
+    "Valentin Got <gotvalentin@gmail.com>",
+    "Olivier Le Lay <liollury@gmail.com>",
+    "Kevin Grandemange <kevin@kevingrandemange.net>"
+  ],
+  "dependencies": {
+    "vue-style-loader": "^3.0.0"
+  }
+}

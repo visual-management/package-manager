@@ -1,6 +1,9 @@
 const chalk = require('chalk'),
   path = require('path'),
   fs = require('fs-extra'),
+  got = require('got'),
+  denodeify = require('denodeify'),
+  spawn = denodeify(require('child_process').spawn),
 
   Plugin = require('../plugin'),
   PluginUtils = require('../utilities/plugin.utils'),
@@ -12,9 +15,9 @@ const chalk = require('chalk'),
 
 class Add {
 
-  constructor (id, options) {
-    this.id = id;
-    this.classifiedName = StringUtils.classify(id);
+  constructor (plugin, options) {
+    this.plugin = plugin;
+    // this.classifiedName = StringUtils.classify(id);
     this.options = options;
 
     this.cli = cli;
@@ -22,18 +25,26 @@ class Add {
   }
 
   start () {
-    return Plugin.get(this.id).then((plugin) => {
-      if (plugin === undefined) {
-        return Promise.reject(`Plugin of id ${chalk.green(this.id)} doesn't exists. Use the ${chalk.green('list')} command to see available plugins.`);
-      }
-
-      this.parsedPath = path.parse(plugin.path);
-
-      this.copyPlugin(plugin);
-      this.writeToManifestFile(plugin);
-      this.writeToReferenceFile(plugin);
-    });
+    // this.copyPlugin(plugin);
+    return this.installPlugin();
+    // this.writeToManifestFile(plugin);
+    // this.writeToReferenceFile(plugin);
   }
+
+  // start () {
+  //   return Plugin.get(this.id).then((plugin) => {
+  //     if (plugin === undefined) {
+  //       return Promise.reject(`Plugin of id ${chalk.green(this.id)} doesn't exists. Use the ${chalk.green('list')} command to see available plugins.`);
+  //     }
+  //
+  //     this.parsedPath = path.parse(plugin.path);
+  //
+  //     // this.copyPlugin(plugin);
+  //     this.installPlugin(plugin);
+  //     // this.writeToManifestFile(plugin);
+  //     this.writeToReferenceFile(plugin);
+  //   });
+  // }
 
   copyPlugin (plugin) {
     const outputPath = path.join(cli.vm.install, this.parsedPath.name);
@@ -45,6 +56,18 @@ class Add {
     }
 
     fs.copySync(plugin.path, outputPath);
+  }
+
+  installPlugin (plugin) {
+    this._log(`[1/2] Installing plugin with NPM`);
+
+    return got(`https://www.npmjs.com/package/${this.plugin}`)
+      .then(() => spawn('npm', [ 'install' ], {
+        stdio: 'pipe',
+        cwd  : cli.root,
+        shell: true
+      }))
+      .catch(() => Promise.reject(`Plugin ${chalk.green(this.plugin)} doesn't exists. See plugins list.`));
   }
 
   writeToManifestFile (plugin) {
@@ -64,7 +87,7 @@ class Add {
       entryPointPath = path.join(pluginsPath, plugin.id, 'entry-point'),
       importPath = DynamicPathParser.relative(path.dirname(referenceFilePath), entryPointPath);
 
-    this._log(`[3/3] Adding plugin to reference file`);
+    this._log(`[2/2] Adding plugin to reference file`);
 
     let referenceFile = fs.readFileSync(referenceFilePath, 'utf8');
 
