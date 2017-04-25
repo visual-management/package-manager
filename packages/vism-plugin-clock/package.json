@@ -1,5 +1,8 @@
 {
-  "name": "vism",
+  "name": "vism-plugin-clock",
+  "version": "0.0.1",
+  "description": "Display a configurable clock",
+  "main": "./entry-point.js",
   "license": "MIT",
   "contributors": [
     "Valentin Got <gotvalentin@gmail.com>",
@@ -10,11 +13,10 @@
     "type": "git",
     "url": "git+https://github.com/ValentinGot/visual-management-pm.git"
   },
-  "devDependencies": {
-    "lerna": "^2.0.0-rc.3"
+  "dependencies": {
+    "vue-style-loader": "^3.0.0"
   },
-  "engines": {
-    "node": ">= 6.9.0",
-    "npm": ">= 3.0.0"
+  "peerDependencies": {
+    "vue": "^2.2.6"
   }
 }

@@ -1,0 +1,15 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+}
+
+.container .clock-day {
+  font-size: 2vw;
+}
+
+.container .clock-time {
+  font-size: 6vw;
+}
