@@ -1,4 +1,4 @@
-import Clock from './clock.component.vue'
+import Clock from './clock.vue'
 
 export default {
   id         : 'clock',
