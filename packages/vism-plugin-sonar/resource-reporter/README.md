@@ -53,7 +53,7 @@ Some on the available metrics can be found [here](https://docs.sonarqube.org/dis
 
 ### onError
 
-`number`, defaults to 0
+`number`, defaults to `0`
 
 If the result is greater (or equal) than the given `onError` value, it will add the `has-error` class to your component.
 
