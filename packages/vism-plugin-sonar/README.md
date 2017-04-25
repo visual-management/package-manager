@@ -4,4 +4,4 @@ A set of components to show SonarQube rules
 
 ## Components
 
-* [Violation reporter](violation-reporter/)
+* [Resource reporter](resource-reporter/)
