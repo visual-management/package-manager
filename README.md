@@ -1,6 +1,6 @@
-# visual-management-pm
+# Visual Management - Package Manager
 
-Package manager & plugins list for [Visual Management](https://github.com/ValentinGot/visual-management).
+Package manager & plugins list for [Visual Management](https://github.com/visual-management/core).
 
 ## Usage
 
