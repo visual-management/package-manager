@@ -1,6 +1,8 @@
 # Job
 
-Show a Job state.
+Show a job state.
+
+When a job is running, a blink animation is showed (through the `.blink` class).
 
 <p align="center">
   <img alt="Job state" src="https://github.com/ValentinGot/visual-management-pm/blob/master/packages/vism-plugin-jenkins/assets/job-state.png?raw=true" />
@@ -16,7 +18,7 @@ Jenkins host.
 
 ### username
 
-`string`;
+`string`
 
 Jenkins username. We can use it when an authentication to the API is needed.
 
