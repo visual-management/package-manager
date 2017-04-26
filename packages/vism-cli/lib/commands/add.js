@@ -23,19 +23,19 @@ class Add {
   }
 
   start () {
-    if (!this.plugin.startsWith('vism-plugin-')) {
-      return Promise.reject(`Plugin name must start with ${chalk.green('vism-plugin-')}`);
+    if (!this.plugin.startsWith('@visual-management/')) {
+      return Promise.reject(`Plugin name must start with ${chalk.green('@visual-management/')}`);
     }
 
     return this.installPlugin()
       .writeToReferenceFile();
   }
 
-  installPlugin (plugin) {
+  installPlugin () {
     this._log(`[1/2] Installing plugin with NPM`);
 
     return got(`https://www.npmjs.com/package/${this.plugin}`)
-      .then(() => spawn('npm', [ 'install' ], {
+      .then(() => spawn('npm', [ 'install', this.plugin, '--save' ], {
         stdio: 'pipe',
         cwd  : cli.root,
         shell: true

@@ -5,7 +5,6 @@ const program = require('commander'),
   pkg = require('../package.json'),
   logger = require('../vendors/logger'),
   CLI = require('../lib/cli'),
-  Plugin = require('../lib/plugin'),
   Add = require('../lib/commands/add'),
   cli = CLI.getInstance();
 
