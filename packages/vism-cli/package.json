@@ -1,5 +1,5 @@
 {
-  "name": "vism-cli",
+  "name": "@visual-management/cli",
   "version": "0.0.1",
   "description": "Package manager for the Visual Management plugins",
   "bin": {

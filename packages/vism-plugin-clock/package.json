@@ -1,5 +1,5 @@
 {
-  "name": "vism-plugin-clock",
+  "name": "@visual-management/plugin-clock",
   "version": "0.0.1",
   "description": "Display a configurable clock",
   "main": "./entry-point.js",

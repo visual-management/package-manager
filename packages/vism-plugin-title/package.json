@@ -1,5 +1,5 @@
 {
-  "name": "vism-plugin-title",
+  "name": "@visual-management/plugin-title",
   "version": "0.0.1",
   "description": "Display a title",
   "main": "./entry-point.js",

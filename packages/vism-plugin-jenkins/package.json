@@ -1,5 +1,5 @@
 {
-  "name": "vism-plugin-jenkins",
+  "name": "@visual-management/plugin-jenkins",
   "version": "0.0.1",
   "description": "A set of components for Jenkins",
   "main": "./entry-point.js",

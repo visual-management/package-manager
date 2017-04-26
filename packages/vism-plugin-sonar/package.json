@@ -1,5 +1,5 @@
 {
-  "name": "vism-plugin-sonar",
+  "name": "@visual-management/plugin-sonar",
   "version": "0.0.1",
   "description": "A set of components to show SonarQube rules",
   "main": "./entry-point.js",
