@@ -37,8 +37,8 @@ It will:
 
 * [@visual-management/plugin-clock](packages/vism-plugin-clock)
 * [@visual-management/plugin-jenkins](packages/vism-plugin-jenkins)
-* [@visual-management/sonar](packages/vism-plugin-sonar)
-* [@visual-management/title](packages/vism-plugin-title)
+* [@visual-management/plugin-sonar](packages/vism-plugin-sonar)
+* [@visual-management/plugin-title](packages/vism-plugin-title)
 
 ## Contributing
 
