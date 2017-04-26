@@ -64,4 +64,3 @@ Useful add some styles on error.
 `number` (in milliseconds), defaults to `60000`
 
 Update counter at this time interval.
-        

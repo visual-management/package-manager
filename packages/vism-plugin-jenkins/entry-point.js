@@ -10,7 +10,9 @@ export default {
       tag          : 'job',
       vue          : Job,
       config       : {
-        host          : 'http://ic-jenkins.sii-ouest.fr/jenkins/',
+        host          : '',
+        username      : '',
+        apiToken      : '',
         job           : '',
         name          : '',
         updateInterval: 60000
