@@ -10,7 +10,7 @@ export default {
       tag          : 'clock',
       vue          : Clock,
       defaultWidth : 8,
-      defaultHeight: 4
+      defaultHeight: 3
     }
   ]
 }
