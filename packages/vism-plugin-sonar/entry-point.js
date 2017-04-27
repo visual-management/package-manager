@@ -1,5 +1,4 @@
 import ResourceReporter from './resource-reporter/resource-reporter.vue';
-import ViolationReporter from './violation-reporter/violation-reporter.component.vue';
 
 export default {
   id         : 'sonar',
@@ -17,19 +16,6 @@ export default {
         unit          : '',
         metric        : '',
         onError       : 0,
-        updateInterval: 60000
-      },
-      defaultWidth : 2,
-      defaultHeight: 2
-    },
-    {
-      name         : 'Violation reporter',
-      tag          : 'violation-reporter',
-      vue          : ViolationReporter,
-      config       : {
-        host          : '',
-        projectId     : 0,
-        violation     : 'blocker',
         updateInterval: 60000
       },
       defaultWidth : 2,
