@@ -37,12 +37,13 @@
     },
 
     created () {
-      setInterval(this.updateClock.bind(this), 1000);
+      this.update();
+      setInterval(this.update.bind(this), 1000);
     },
 
     methods: {
 
-      updateClock () {
+      update () {
         let now = new Date(),
           day = now.getDate(),
           month = now.getMonth(),
