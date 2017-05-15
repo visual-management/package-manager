@@ -1,4 +1,5 @@
 import Job from './job/job.vue'
+import JobsList from './jobs-list/job-list.vue'
 
 export default {
   id         : 'jenkins',
@@ -18,6 +19,20 @@ export default {
         updateInterval: 60000
       },
       defaultWidth : 2,
+      defaultHeight: 2
+    },
+    {
+      name         : 'Jobs list',
+      tag          : 'jobs-list',
+      vue          : JobsList,
+      config       : {
+        host          : '',
+        username      : '',
+        apiToken      : '',
+        jobs          : [],
+        updateInterval: 60000
+      },
+      defaultWidth : 4,
       defaultHeight: 2
     }
   ]
