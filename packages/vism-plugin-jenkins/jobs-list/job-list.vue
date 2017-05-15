@@ -158,6 +158,8 @@
     methods: {
 
       update () {
+        this.jobs = [];
+        
         this.config.jobs.forEach(async (job) => {
           const jobRes = await this.$http.get(this.getUrl(job), this.httpOptions);
           const body = jobRes.body;
