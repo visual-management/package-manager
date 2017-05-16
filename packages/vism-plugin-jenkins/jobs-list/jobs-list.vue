@@ -157,8 +157,6 @@
     methods: {
 
       update (firstTime = false) {
-        this.jobs = [];
-
         this.config.jobs.forEach(async (job) => {
           const jobRes = await this.$http.get(this.getUrl(job), this.httpOptions);
           const body = jobRes.body;
@@ -181,7 +179,7 @@
           if (firstTime) {
             this.jobs.push(jobObj);
           } else {
-            this.jobs.map((item) => {
+            this.jobs = this.jobs.map((item) => {
               if (item.id === job.id) {
                 item = jobObj;
               }
