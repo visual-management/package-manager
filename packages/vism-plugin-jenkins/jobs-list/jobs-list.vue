@@ -118,6 +118,7 @@
           name: String,
           id: String
         } ],
+        scrollDuration: Number,
         updateInterval: Number
       }
     },
@@ -148,7 +149,7 @@
 
     mounted () {
       this.update();
-      setTimeout(this.scrollIt, 500); // Wait for component to be fully rendered
+      setTimeout(this.autoScroll, 500); // Wait for component to be fully rendered
 
       setInterval(this.update.bind(this), this.config.updateInterval);
     },
@@ -254,12 +255,12 @@
         return this.$http.get(`${url}api/json?pretty=true`, this.httpOptions).then((data) => data.body);
       },
 
-      scrollIt () {
+      autoScroll () {
         let direction, duration, start, startTime, destinationOffsetToScroll;
 
         const reset = () => {
           direction = (direction === 'bottom') ? 'top' : 'bottom';
-          duration = (direction === 'bottom') ? 4000 : 2000;
+          duration = (direction === 'bottom') ? this.config.scrollDuration * 2 : this.config.scrollDuration;
           start = this.$el.scrollTop;
           startTime = 'now' in window.performance ? performance.now() : new Date().getTime();
           destinationOffsetToScroll = (direction === 'bottom') ? this.$el.scrollHeight : 0;
