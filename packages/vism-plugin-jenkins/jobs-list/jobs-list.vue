@@ -148,7 +148,7 @@
     },
 
     mounted () {
-      this.update();
+      this.update(true);
       setTimeout(this.autoScroll, 500); // Wait for component to be fully rendered
 
       setInterval(this.update.bind(this), this.config.updateInterval);
@@ -156,7 +156,7 @@
 
     methods: {
 
-      update () {
+      update (firstTime = false) {
         this.jobs = [];
 
         this.config.jobs.forEach(async (job) => {
@@ -178,11 +178,22 @@
             jobObj.timeSince = this.getTimeSince(new Date(buildRes.timestamp));
           }
 
-          const order = [ 'red', 'yellow', 'notbuilt', 'aborted', 'disabled', 'grey', 'blue' ];
+          if (firstTime) {
+            this.jobs.push(jobObj);
+          } else {
+            this.jobs.map((item) => {
+              if (item.id === job.id) {
+                item = jobObj;
+              }
 
-          this.jobs.push(jobObj);
-          this.jobs.sort((a, b) => order.indexOf(a.color) - order.indexOf(b.color));
+              return item;
+            })
+          }
         });
+
+        const order = [ 'red', 'yellow', 'notbuilt', 'aborted', 'disabled', 'grey', 'blue' ];
+
+        this.jobs.sort((a, b) => order.indexOf(a.color) - order.indexOf(b.color));
       },
 
       getUrl (job) {
