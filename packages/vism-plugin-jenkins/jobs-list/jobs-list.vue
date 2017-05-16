@@ -118,7 +118,6 @@
           name: String,
           id: String
         } ],
-        scrollDuration: Number,
         updateInterval: Number
       }
     },
@@ -269,7 +268,7 @@
 
         const reset = () => {
           direction = (direction === 'bottom') ? 'top' : 'bottom';
-          duration = (direction === 'bottom') ? this.config.scrollDuration * 2 : this.config.scrollDuration;
+          duration = (direction === 'bottom') ? this.config.jobs.length * 400 * 2 : this.config.jobs.length * 400;
           start = this.$el.scrollTop;
           startTime = 'now' in window.performance ? performance.now() : new Date().getTime();
           destinationOffsetToScroll = (direction === 'bottom') ? this.$el.scrollHeight : 0;

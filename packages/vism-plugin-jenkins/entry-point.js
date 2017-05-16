@@ -16,7 +16,6 @@ export default {
         apiToken      : '',
         job           : '',
         name          : '',
-        scrollDuration: 2000,
         updateInterval: 60000
       },
       defaultWidth : 2,
