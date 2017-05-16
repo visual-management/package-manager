@@ -124,6 +124,7 @@
 
     data () {
       return {
+        scrollDuration: 500,
         jobs: []
       }
     },
@@ -148,7 +149,7 @@
 
     mounted () {
       this.update(true);
-      setTimeout(this.autoScroll, 500); // Wait for component to be fully rendered
+      setTimeout(this.autoScroll, 10000); // Wait for component to be fully rendered & wait for RPI to load the page
 
       setInterval(this.update.bind(this), this.config.updateInterval);
     },
@@ -268,7 +269,7 @@
 
         const reset = () => {
           direction = (direction === 'bottom') ? 'top' : 'bottom';
-          duration = (direction === 'bottom') ? this.config.jobs.length * 400 * 2 : this.config.jobs.length * 400;
+          duration = (direction === 'bottom') ? this.config.jobs.length * this.scrollDuration * 2 : this.config.jobs.length * this.scrollDuration;
           start = this.$el.scrollTop;
           startTime = 'now' in window.performance ? performance.now() : new Date().getTime();
           destinationOffsetToScroll = (direction === 'bottom') ? this.$el.scrollHeight : 0;
