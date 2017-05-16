@@ -72,9 +72,6 @@
     margin: 0;
   }
 
-  .job .time-since {
-  }
-
   @-webkit-keyframes blue-blink {
     0%   { background-color: #8CC04F; }
     33%  { background-color: #6A9B30; }
@@ -149,8 +146,9 @@
       }
     },
 
-    created () {
+    mounted () {
       this.update();
+      setTimeout(this.scrollIt, 500); // Wait for component to be fully rendered
 
       setInterval(this.update.bind(this), this.config.updateInterval);
     },
@@ -179,7 +177,10 @@
             jobObj.timeSince = this.getTimeSince(new Date(buildRes.timestamp));
           }
 
+          const order = [ 'red', 'yellow', 'notbuilt', 'aborted', 'disabled', 'grey', 'blue' ];
+
           this.jobs.push(jobObj);
+          this.jobs.sort((a, b) => order.indexOf(a.color) - order.indexOf(b.color));
         });
       },
 
@@ -251,6 +252,37 @@
 
       getBuild (url) {
         return this.$http.get(`${url}api/json?pretty=true`, this.httpOptions).then((data) => data.body);
+      },
+
+      scrollIt () {
+        let direction, duration, start, startTime, destinationOffsetToScroll;
+
+        const reset = () => {
+          direction = (direction === 'bottom') ? 'top' : 'bottom';
+          duration = (direction === 'bottom') ? 4000 : 2000;
+          start = this.$el.scrollTop;
+          startTime = 'now' in window.performance ? performance.now() : new Date().getTime();
+          destinationOffsetToScroll = (direction === 'bottom') ? this.$el.scrollHeight : 0;
+        };
+        reset();
+
+        const scroll = () => {
+          const now = 'now' in window.performance ? performance.now() : new Date().getTime(),
+            time = Math.min(1, ((now - startTime) / duration));
+
+          this.$el.scrollTop = Math.ceil((time * (destinationOffsetToScroll - start)) + start);
+
+          if (
+            (direction === 'top' && this.$el.scrollTop === 0) ||
+            (direction === 'bottom' && (this.$el.scrollTop + this.$el.clientHeight) === destinationOffsetToScroll)
+          ) {
+            reset();
+          }
+
+          requestAnimationFrame(scroll)
+        };
+
+        scroll();
       }
 
     }
