@@ -1,5 +1,5 @@
 import Job from './job/job.vue'
-import JobsList from './jobs-list/job-list.vue'
+import JobsList from './jobs-list/jobs-list.vue'
 
 export default {
   id         : 'jenkins',
