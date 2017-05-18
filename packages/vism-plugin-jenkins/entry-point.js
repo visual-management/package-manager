@@ -26,11 +26,12 @@ export default {
       tag          : 'jobs-list',
       vue          : JobsList,
       config       : {
-        host          : '',
-        username      : '',
-        apiToken      : '',
-        jobs          : [],
-        updateInterval: 60000
+        host              : '',
+        username          : '',
+        apiToken          : '',
+        jobs              : [],
+        paginationInterval: 5000,
+        updateInterval    : 60000
       },
       defaultWidth : 4,
       defaultHeight: 2

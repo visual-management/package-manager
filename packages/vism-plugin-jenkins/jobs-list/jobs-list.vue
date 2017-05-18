@@ -130,14 +130,15 @@
 
     props: {
       config: {
-        host          : String,
-        username      : String,
-        apiToken      : String,
-        jobs          : [ {
+        host              : String,
+        username          : String,
+        apiToken          : String,
+        jobs              : [ {
           name: String,
-          id: String
+          id  : String
         } ],
-        updateInterval: Number
+        paginationInterval: Number,
+        updateInterval    : Number
       }
     },
 
@@ -230,44 +231,6 @@
         }
       },
 
-      xupdate (firstTime = false) {
-        this.config.jobs.forEach(async (job) => {
-          const jobRes = await this.$http.get(this.getUrl(job), this.httpOptions);
-          const body = jobRes.body;
-
-          let jobObj = {
-            id     : job.id,
-            name   : job.name,
-            url    : this.getLastSuccessfulBuildUrl(job),
-            color  : body.color.replace('_anime', ''),
-            blink  : body.color.includes('anime'),
-            weather: this.getWeather((body.healthReport && body.healthReport.length > 0) ? body.healthReport[ 0 ].score : 0)
-          };
-
-          if (body.lastBuild) {
-            let buildRes = await this.getBuild(body.lastBuild.url);
-
-            jobObj.timeSince = this.getTimeSince(new Date(buildRes.timestamp));
-          }
-
-          if (firstTime) {
-            this.jobs.push(jobObj);
-          } else {
-            this.jobs = this.jobs.map((item) => {
-              if (item.id === job.id) {
-                item = jobObj;
-              }
-
-              return item;
-            })
-          }
-        });
-
-        const order = [ 'red', 'yellow', 'notbuilt', 'aborted', 'disabled', 'grey', 'blue' ];
-
-        this.jobs.sort((a, b) => order.indexOf(a.color) - order.indexOf(b.color));
-      },
-
       getUrl (job) {
         return `${this.host}/job/${job.id}/api/json`;
       },
@@ -346,7 +309,7 @@
         this.paginate();
 
         if (this.maxPage > 0) {
-          setInterval(this.paginate, 5000);
+          setInterval(this.paginate, this.config.paginationInterval);
         }
       },
 
