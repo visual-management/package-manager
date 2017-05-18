@@ -1,10 +1,19 @@
 <template>
   <div class="jobs">
     <a
+      class="job specimen"
+      :hidden="specimenHidden">
+      <img class="weather sunny" />
+      <h4>Specimen</h4>
+      <span class="time-since">1d</span>
+    </a>
+
+    <a
       class="job"
       target="_blank"
       :href="job.url"
-      v-for="job in jobs" :class="[ job.color, { blink: job.blink } ]">
+      :class="[ job.color, { blink: job.blink, hidden: hidden } ]"
+      v-for="job in jobs">
       <img class="weather" :class="[ job.weather ]" />
       <h4>{{ job.name }}</h4>
       <span class="time-since">{{ job.timeSince }}</span>
@@ -17,6 +26,10 @@
     display: none;
   }
 
+  [hidden] {
+    display: none !important;
+  }
+
   .jobs {
     overflow: auto;
     display: flex;
@@ -27,6 +40,7 @@
   }
 
   .jobs .job {
+    opacity: 1;
     display: flex;
     align-items: center;
     flex-shrink: 0;
@@ -34,6 +48,11 @@
     padding: 8px 10px;
     border-radius: 2px;
     text-decoration: none;
+    transition: opacity 1s;
+  }
+
+  .jobs .job.hidden {
+    opacity: 0;
   }
 
   .jobs .job:last-child {
@@ -124,7 +143,12 @@
 
     data () {
       return {
-        scrollDuration: 500,
+        specimenHidden: false,
+        specimenHeight: 0,
+        page: 0,
+        maxPage: 0,
+        hidden: false,
+        allJobs: [],
         jobs: []
       }
     },
@@ -148,15 +172,65 @@
     },
 
     mounted () {
-      this.update(true);
-      setTimeout(this.autoScroll, 10000); // Wait for component to be fully rendered & wait for RPI to load the page
 
-      setInterval(this.update.bind(this), this.config.updateInterval);
+      // Retrieve the specimen height to know how much jobs we can show
+      this.specimenHeight = this.$el.querySelector('.job.specimen').offsetHeight;
+      this.specimenHidden = true;
+
+      // Wait for the element to be fully displayed
+      setTimeout(() => {
+        this.maxPage = Math.ceil(this.config.jobs.length / this.howMuchJobsPerPage()) - 1;
+
+        this.update(true);
+      }, 100);
+      setInterval(this.update, 10000);
     },
 
     methods: {
 
       update (firstTime = false) {
+        this.config.jobs.forEach(async (job) => {
+          const jobRes = await this.$http.get(this.getUrl(job), this.httpOptions);
+          const body = jobRes.body;
+
+          let jobObj = {
+            id     : job.id,
+            name   : job.name,
+            url    : this.getLastSuccessfulBuildUrl(job),
+            color  : body.color.replace('_anime', ''),
+            blink  : body.color.includes('anime'),
+            weather: this.getWeather((body.healthReport && body.healthReport.length > 0) ? body.healthReport[ 0 ].score : 0)
+          };
+
+          if (body.lastBuild) {
+            let buildRes = await this.getBuild(body.lastBuild.url);
+
+            jobObj.timeSince = this.getTimeSince(new Date(buildRes.timestamp));
+          }
+
+          if (firstTime) {
+            this.allJobs.push(jobObj);
+          } else {
+            this.allJobs = this.allJobs.map((item) => {
+              if (item.id === job.id) {
+                item = jobObj;
+              }
+
+              return item;
+            });
+          }
+        });
+
+        // Sort & Paginate jobs
+        const order = [ 'red', 'yellow', 'notbuilt', 'aborted', 'disabled', 'grey', 'blue' ];
+        this.allJobs.sort((a, b) => order.indexOf(a.color) - order.indexOf(b.color));
+
+        if (firstTime) {
+          this.autoPagination();
+        }
+      },
+
+      xupdate (firstTime = false) {
         this.config.jobs.forEach(async (job) => {
           const jobRes = await this.$http.get(this.getUrl(job), this.httpOptions);
           const body = jobRes.body;
@@ -264,35 +338,53 @@
         return this.$http.get(`${url}api/json?pretty=true`, this.httpOptions).then((data) => data.body);
       },
 
-      autoScroll () {
-        let direction, duration, start, startTime, destinationOffsetToScroll;
+      howMuchJobsPerPage () {
+        return Math.floor(this.$el.offsetHeight / this.specimenHeight);
+      },
 
-        const reset = () => {
-          direction = (direction === 'bottom') ? 'top' : 'bottom';
-          duration = (direction === 'bottom') ? this.config.jobs.length * this.scrollDuration * 2 : this.config.jobs.length * this.scrollDuration;
-          start = this.$el.scrollTop;
-          startTime = 'now' in window.performance ? performance.now() : new Date().getTime();
-          destinationOffsetToScroll = (direction === 'bottom') ? this.$el.scrollHeight : 0;
-        };
-        reset();
+      autoPagination () {
+        this.paginate();
 
-        const scroll = () => {
-          const now = 'now' in window.performance ? performance.now() : new Date().getTime(),
-            time = Math.min(1, ((now - startTime) / duration));
+        if (this.maxPage > 0) {
+          setInterval(this.paginate, 5000);
+        }
+      },
 
-          this.$el.scrollTop = Math.ceil((time * (destinationOffsetToScroll - start)) + start);
+      paginate () {
+        this.fadeOut(() => {
+          this.jobs = [];
 
-          if (
-            (direction === 'top' && this.$el.scrollTop === 0) ||
-            (direction === 'bottom' && (this.$el.scrollTop + this.$el.clientHeight) === destinationOffsetToScroll)
-          ) {
-            reset();
+          const jobsPerPage = this.howMuchJobsPerPage();
+
+          this.jobs = this.allJobs.slice(this.page * jobsPerPage, (this.page * jobsPerPage) + jobsPerPage);
+
+          this.page++;
+          if (this.page > this.maxPage) {
+            this.page = 0;
           }
 
-          requestAnimationFrame(scroll)
-        };
+          setTimeout(this.fadeIn, 50);
+        });
+      },
 
-        scroll();
+      fadeOut (cb) {
+        this.hidden = true;
+
+        setTimeout(() => {
+          if (cb) {
+            cb();
+          }
+        }, 1100);
+      },
+
+      fadeIn (cb) {
+        this.hidden = false;
+
+        setTimeout(() => {
+          if (cb) {
+            cb();
+          }
+        }, 1000);
       }
 
     }
