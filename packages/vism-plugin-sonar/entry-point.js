@@ -1,4 +1,5 @@
 import ResourceReporter from './resource-reporter/resource-reporter.vue';
+import ProjectHealth from './project-health/project-health.vue';
 
 export default {
   id         : 'sonar',
@@ -19,6 +20,19 @@ export default {
         updateInterval: 60000
       },
       defaultWidth : 2,
+      defaultHeight: 2
+    },
+    {
+      name         : 'Project Health',
+      tag          : 'project-health',
+      vue          : ProjectHealth,
+      config       : {
+        host          : '',
+        projectKey    : '',
+        name          : '',
+        updateInterval: 60000
+      },
+      defaultWidth : 15,
       defaultHeight: 2
     }
   ]
