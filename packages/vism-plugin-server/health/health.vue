@@ -11,7 +11,7 @@
   .healths {
     display: flex;
     height: 100%;
-    padding: 8px;
+    padding: 8px 8px 8px 4px;
     box-sizing: border-box;
   }
 
@@ -21,16 +21,13 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
+    margin: 0 4px;
     padding: 8px;
     transition: opacity 1s;
   }
 
   .health.hidden {
     opacity: 0;
-  }
-
-  .health + .health {
-    margin-left: 8px;
   }
 
   .health.ok { background-color: #4CAF50; }
@@ -92,7 +89,7 @@
 
         this.update(true);
       }, 100);
-//      setInterval(this.update, this.updateInterval);
+      setInterval(this.update, this.config.updateInterval);
     },
 
     methods: {
@@ -134,7 +131,7 @@
       },
 
       howMuchJobsPerPage () {
-        return Math.floor(this.$el.offsetWidth / 130); // 130px for health element width
+        return Math.floor((this.$el.offsetWidth - 8) / 146); // 130px + 4px of margin + 8px of padding for health element width
       },
 
       autoPagination () {
