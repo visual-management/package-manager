@@ -123,7 +123,7 @@
 
         // Sort & Paginate jobs
         const order = [ 'ko', 'ok' ];
-        this.allUrls.sort((a, b) => order.indexOf(a.color) - order.indexOf(b.color));
+        this.allUrls.sort((a, b) => order.indexOf(a.status) - order.indexOf(b.status));
 
         if (firstTime) {
           this.autoPagination();
