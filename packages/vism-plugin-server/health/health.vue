@@ -57,11 +57,12 @@
 
     props: {
       config: {
-        urls          : [ {
+        urls           : [ {
           name: String,
           url : String
         } ],
-        updateInterval: Number
+        showWorkingUrls: Boolean,
+        updateInterval : Number
       }
     },
 
@@ -108,6 +109,7 @@
             urlObj.status = 'ko';
           }
 
+          if (this.config.showWorkingUrls || (!this.config.showWorkingUrls && urlObj.status !== 'ok'))
           if (firstTime) {
             this.allUrls.push(urlObj);
           } else {

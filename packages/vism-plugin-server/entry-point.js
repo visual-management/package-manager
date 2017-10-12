@@ -10,13 +10,14 @@ export default {
       tag          : 'health',
       vue          : Health,
       config       : {
-        urls          : [
+        urls           : [
           {
             name: '',
             url : ''
           }
         ],
-        updateInterval: 60000
+        showWorkingUrls: false,
+        updateInterval : 60000
       },
       defaultWidth : 2,
       defaultHeight: 2
