@@ -93,8 +93,8 @@
     },
 
     methods: {
-      update (firstTime = false) {
-        this.config.urls.forEach(async (url) => {
+      async update (firstTime = false) {
+        for (const url of this.config.urls) {
           const urlObj = {
             name: url.name,
             url: url.url
@@ -119,12 +119,13 @@
               return item;
             });
           }
-        });
+        }
 
-        // Sort & Paginate jobs
+        // Sort jobs
         const order = [ 'ko', 'ok' ];
         this.allUrls.sort((a, b) => order.indexOf(a.status) - order.indexOf(b.status));
 
+        // Paginate jobs
         if (firstTime) {
           this.autoPagination();
         }
