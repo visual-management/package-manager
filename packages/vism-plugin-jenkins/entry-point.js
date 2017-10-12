@@ -29,7 +29,13 @@ export default {
         host              : '',
         username          : '',
         apiToken          : '',
-        jobs              : [],
+        jobs              : [
+          {
+            id: '',
+            name: ''
+          }
+        ],
+        showSuccessful    : false,
         paginationInterval: 5000,
         updateInterval    : 60000
       },

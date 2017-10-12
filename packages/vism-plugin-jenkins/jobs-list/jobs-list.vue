@@ -1,5 +1,9 @@
 <template>
   <div class="jobs">
+    <div class="everything-is-ok" :hidden="jobs.length > 0">
+      <img src="../assets/weather/sunny.svg" />
+    </div>
+
     <a
       class="job specimen"
       :hidden="specimenHidden">
@@ -28,6 +32,18 @@
 
   [hidden] {
     display: none !important;
+  }
+
+  .everything-is-ok {
+    overflow: auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+  }
+
+  .everything-is-ok > img {
+    height: 50%;
   }
 
   .jobs {
@@ -137,6 +153,7 @@
           name: String,
           id  : String
         } ],
+        showSuccessful    : Boolean,
         paginationInterval: Number,
         updateInterval    : Number
       }
@@ -189,8 +206,8 @@
 
     methods: {
 
-      update (firstTime = false) {
-        this.config.jobs.forEach(async (job) => {
+      async update (firstTime = false) {
+        for (const job of this.config.jobs) {
           const jobRes = await this.$http.get(this.getUrl(job), this.httpOptions);
           const body = jobRes.body;
 
@@ -203,29 +220,32 @@
             weather: this.getWeather((body.healthReport && body.healthReport.length > 0) ? body.healthReport[ 0 ].score : 0)
           };
 
-          if (body.lastBuild) {
-            let buildRes = await this.getBuild(body.lastBuild.url);
+          if (this.config.showSuccessful || (!this.config.showSuccessful && jobObj.color !== 'blue')) {
+            if (body.lastBuild) {
+              let buildRes = await this.getBuild(body.lastBuild.url);
 
-            jobObj.timeSince = this.getTimeSince(new Date(buildRes.timestamp));
+              jobObj.timeSince = this.getTimeSince(new Date(buildRes.timestamp));
+            }
+
+            if (firstTime) {
+              this.allJobs.push(jobObj);
+            } else {
+              this.allJobs = this.allJobs.map((item) => {
+                if (item.id === job.id) {
+                  item = jobObj;
+                }
+
+                return item;
+              });
+            }
           }
+        }
 
-          if (firstTime) {
-            this.allJobs.push(jobObj);
-          } else {
-            this.allJobs = this.allJobs.map((item) => {
-              if (item.id === job.id) {
-                item = jobObj;
-              }
-
-              return item;
-            });
-          }
-        });
-
-        // Sort & Paginate jobs
+        // Sort jobs
         const order = [ 'red', 'yellow', 'notbuilt', 'aborted', 'disabled', 'grey', 'blue' ];
         this.allJobs.sort((a, b) => order.indexOf(a.color) - order.indexOf(b.color));
 
+        // Paginate jobs
         if (firstTime) {
           this.autoPagination();
         }
