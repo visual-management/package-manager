@@ -199,7 +199,7 @@
       setTimeout(() => {
         this.update(true);
       }, 100);
-      setInterval(this.update, 10000);
+      setInterval(this.update, this.config.updateInterval);
     },
 
     methods: {
