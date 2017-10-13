@@ -1,6 +1,6 @@
 <template>
   <div class="healths">
-    <div :class="[ 'health', url.status, { hidden: hidden } ]" v-for="url in urls">
+    <div :class="[ 'health', url.status, { hidden: hidden } ]" v-for="url in urls" @click="goTo(url.url)">
       <div class="title">{{ url.name }} </div>
       <img :class="url.status" />
     </div>
@@ -16,6 +16,7 @@
   }
 
   .health {
+    cursor: pointer;
     opacity: 1;
     display: flex;
     flex-direction: column;
@@ -92,6 +93,11 @@
     },
 
     methods: {
+
+      goTo (url) {
+        window.open(url)
+      },
+
       async update (firstTime = false) {
         for (const url of this.config.urls) {
           const urlObj = {
@@ -108,17 +114,17 @@
           }
 
           if (this.config.showWorkingUrls || (!this.config.showWorkingUrls && urlObj.status !== 'ok'))
-          if (firstTime) {
-            this.allUrls.push(urlObj);
-          } else {
-            this.allUrls = this.allUrls.map((item) => {
-              if (item.url === urlObj.url) {
-                item = urlObj;
-              }
+            if (firstTime) {
+              this.allUrls.push(urlObj);
+            } else {
+              this.allUrls = this.allUrls.map((item) => {
+                if (item.url === urlObj.url) {
+                  item = urlObj;
+                }
 
-              return item;
-            });
-          }
+                return item;
+              });
+            }
         }
 
         // Sort jobs
