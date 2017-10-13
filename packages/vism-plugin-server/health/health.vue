@@ -1,5 +1,9 @@
 <template>
   <div class="healths">
+    <div class="everything-is-ok" v-show="urls.length === 0">
+      <img src="../assets/health/ok.svg" />
+    </div>
+
     <div :class="[ 'health', url.status, { hidden: hidden } ]" v-for="url in urls" @click="goTo(url.url)">
       <div class="title">{{ url.name }} </div>
       <img :class="url.status" />
@@ -13,6 +17,19 @@
     height: 100%;
     padding: 8px 8px 8px 4px;
     box-sizing: border-box;
+  }
+
+  .healths .everything-is-ok {
+    overflow: auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+  }
+
+  .healths .everything-is-ok > img {
+    height: 50%;
   }
 
   .health {
