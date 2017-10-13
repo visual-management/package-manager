@@ -86,8 +86,6 @@
 
       // Wait for the element to be fully displayed
       setTimeout(() => {
-        this.maxPage = Math.ceil(this.config.urls.length / this.howMuchJobsPerPage()) - 1;
-
         this.update(true);
       }, 100);
       setInterval(this.update, this.config.updateInterval);
@@ -138,6 +136,7 @@
       },
 
       autoPagination () {
+        this.maxPage = Math.ceil(this.allUrls.length / this.howMuchJobsPerPage()) - 1;
         this.paginate();
 
         if (this.maxPage > 0) {
