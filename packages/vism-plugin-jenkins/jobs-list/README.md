@@ -30,8 +30,20 @@ Jenkins token for the API. We can use it when an authentication to the API is ne
 
 Jobs information.
 
+### showSuccessful
+
+`boolean`, defaults to `false`
+
+Whether to show successful builds or not.
+
+### paginationInterval
+
+`number` (in milliseconds), defaults to `5000`
+
+Switch page at this time interval.
+
 ### updateInterval
 
 `number` (in milliseconds), defaults to `60000`
 
-Update counter at this time interval.
+Update jobs info at this time interval.
