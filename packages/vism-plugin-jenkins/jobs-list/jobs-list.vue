@@ -164,10 +164,11 @@
         specimenHidden: false,
         specimenHeight: 0,
         page: 0,
-        maxPage: 0,
+        pages: null,
         hidden: false,
         allJobs: [],
-        jobs: []
+        jobs: [],
+        paginationIntervalRef: null
       }
     },
 
@@ -243,10 +244,14 @@
         const order = [ 'red', 'yellow', 'notbuilt', 'aborted', 'disabled', 'grey', 'blue' ];
         this.allJobs.sort((a, b) => order.indexOf(a.color) - order.indexOf(b.color));
 
+        // Calculate the number of pages
+        // Check if the number of pages has changed since the last update
+        const newPages = Math.ceil(this.allJobs.length / this.howMuchJobsPerPage()) - 1;
+        const pagesChanged = this.pages !== newPages;
+        this.pages = newPages;
+
         // Paginate jobs
-        if (firstTime) {
-          this.autoPagination();
-        }
+        this.autoPagination(pagesChanged);
       },
 
       getUrl (job) {
@@ -323,12 +328,21 @@
         return Math.floor(this.$el.offsetHeight / this.specimenHeight);
       },
 
-      autoPagination () {
-        this.maxPage = Math.ceil(this.allJobs.length / this.howMuchJobsPerPage()) - 1;
-        this.paginate();
+      autoPagination (pagesChanged) {
 
-        if (this.maxPage > 0) {
-          setInterval(this.paginate, this.config.paginationInterval);
+        // Do a manual pagination in case there is only 1 page and the number of pages changed
+        // PS: It also work for the first time, because the number of pages has changed
+        if (pagesChanged && this.pages === 0) {
+          this.paginate();
+        }
+
+        if (pagesChanged && this.paginationIntervalRef !== null) {
+          clearInterval(this.paginationIntervalRef);
+        }
+
+        // Interval only if their is more than 1 page, otherwise the same page will fadeOut/In every 5 seconds (or so), kind of boring
+        if (pagesChanged && this.pages > 0) {
+          this.paginationIntervalRef = setInterval(this.paginate, this.config.paginationInterval);
         }
       },
 
@@ -341,7 +355,7 @@
           this.jobs = this.allJobs.slice(this.page * jobsPerPage, (this.page * jobsPerPage) + jobsPerPage);
 
           this.page++;
-          if (this.page > this.maxPage) {
+          if (this.page > this.pages) {
             this.page = 0;
           }
 
