@@ -87,7 +87,7 @@
     data () {
       return {
         page: 0,
-        pages: null,
+        pages: 0,
         hidden: false,
         allUrls: [],
         urls: [],
@@ -165,9 +165,8 @@
 
       autoPagination (pagesChanged) {
 
-        // Do a manual pagination in case there is only 1 page and the number of pages changed
-        // PS: It also work for the first time, because the number of pages has changed
-        if (pagesChanged && this.pages === 0) {
+        // Do a manual pagination in case there is only 1 page
+        if (this.pages === 0) {
           this.paginate();
         }
 
