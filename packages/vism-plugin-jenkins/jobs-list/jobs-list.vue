@@ -213,7 +213,7 @@
           let jobObj = {
             id     : job.id,
             name   : job.name,
-            url    : this.getLastSuccessfulBuildUrl(job),
+            url    : this.getLastBuildUrl(job, body.color.replace('_anime', '') === 'blue'),
             color  : body.color.replace('_anime', ''),
             blink  : body.color.includes('anime'),
             weather: this.getWeather((body.healthReport && body.healthReport.length > 0) ? body.healthReport[ 0 ].score : 0)
@@ -258,8 +258,8 @@
         return `${this.host}/job/${job.id}/api/json`;
       },
 
-      getLastSuccessfulBuildUrl (job) {
-        return `${this.host}/job/${job.id}/lastSuccessfulBuild/console`
+      getLastBuildUrl (job, success) {
+        return `${this.host}/job/${job.id}/${(success) ? 'lastSuccessfulBuild' : 'lastFailedBuild'}/console`
       },
 
       getWeather (score) {
