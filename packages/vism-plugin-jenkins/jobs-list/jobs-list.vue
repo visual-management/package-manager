@@ -330,8 +330,7 @@
 
       autoPagination (pagesChanged) {
 
-        // Do a manual pagination in case there is only 1 page and the number of pages changed
-        // PS: It also work for the first time, because the number of pages has changed
+        // Do a manual pagination in case there is only 1 page
         if (this.pages === 0) {
           this.paginate();
         }
