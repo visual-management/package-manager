@@ -87,10 +87,11 @@
     data () {
       return {
         page: 0,
-        maxPage: 0,
+        pages: null,
         hidden: false,
         allUrls: [],
-        urls: []
+        urls: [],
+        paginationIntervalRef: null
       }
     },
 
@@ -148,22 +149,35 @@
         const order = [ 'ko', 'ok' ];
         this.allUrls.sort((a, b) => order.indexOf(a.status) - order.indexOf(b.status));
 
+        // Calculate the number of pages
+        // Check if the number of pages has changed since the last update
+        const newPages = Math.ceil(this.allUrls.length / this.howMuchJobsPerPage()) - 1;
+        const pagesChanged = this.pages !== newPages;
+        this.pages = newPages;
+
         // Paginate jobs
-        if (firstTime) {
-          this.autoPagination();
-        }
+        this.autoPagination(pagesChanged);
       },
 
       howMuchJobsPerPage () {
         return Math.floor((this.$el.offsetWidth - 8) / 146); // 130px + 4px of margin + 8px of padding for health element width
       },
 
-      autoPagination () {
-        this.maxPage = Math.ceil(this.allUrls.length / this.howMuchJobsPerPage()) - 1;
-        this.paginate();
+      autoPagination (pagesChanged) {
 
-        if (this.maxPage > 0) {
-          setInterval(this.paginate, 5000);
+        // Do a manual pagination in case there is only 1 page and the number of pages changed
+        // PS: It also work for the first time, because the number of pages has changed
+        if (pagesChanged && this.pages === 0) {
+          this.paginate();
+        }
+
+        if (pagesChanged && this.paginationIntervalRef !== null) {
+          clearInterval(this.paginationIntervalRef);
+        }
+
+        // Interval only if their is more than 1 page, otherwise the same page will fadeOut/In every 5 seconds, kind of boring
+        if (pagesChanged && this.pages > 0) {
+          this.paginationIntervalRef = setInterval(this.paginate, 5000);
         }
       },
 
@@ -176,7 +190,7 @@
           this.urls = this.allUrls.slice(this.page * urlsPerPage, (this.page * urlsPerPage) + urlsPerPage);
 
           this.page++;
-          if (this.page > this.maxPage) {
+          if (this.page > this.pages) {
             this.page = 0;
           }
 
