@@ -164,7 +164,7 @@
         specimenHidden: false,
         specimenHeight: 0,
         page: 0,
-        pages: null,
+        pages: 0,
         hidden: false,
         allJobs: [],
         jobs: [],
@@ -332,7 +332,7 @@
 
         // Do a manual pagination in case there is only 1 page and the number of pages changed
         // PS: It also work for the first time, because the number of pages has changed
-        if (pagesChanged && this.pages === 0) {
+        if (this.pages === 0) {
           this.paginate();
         }
 
