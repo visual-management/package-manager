@@ -102,11 +102,7 @@
     },
 
     mounted () {
-
-      // Wait for the element to be fully displayed
-      setTimeout(() => {
-        this.update(true);
-      }, 100);
+      setTimeout(this.update, 100); // Wait for the element to be fully displayed
       setInterval(this.update, this.config.updateInterval);
     },
 
@@ -116,7 +112,9 @@
         window.open(url)
       },
 
-      async update (firstTime = false) {
+      async update () {
+        this.allUrls = [];
+
         for (const url of this.config.urls) {
           const urlObj = {
             name: url.name,
@@ -131,18 +129,9 @@
             urlObj.status = 'ko';
           }
 
-          if (this.config.showWorkingUrls || (!this.config.showWorkingUrls && urlObj.status !== 'ok'))
-            if (firstTime) {
-              this.allUrls.push(urlObj);
-            } else {
-              this.allUrls = this.allUrls.map((item) => {
-                if (item.url === urlObj.url) {
-                  item = urlObj;
-                }
-
-                return item;
-              });
-            }
+          if (this.config.showWorkingUrls || (!this.config.showWorkingUrls && urlObj.status !== 'ok')) {
+            this.allUrls.push(urlObj);
+          }
         }
 
         // Sort jobs
@@ -151,7 +140,7 @@
 
         // Calculate the number of pages
         // Check if the number of pages has changed since the last update
-        const newPages = Math.ceil(this.allUrls.length / this.howMuchJobsPerPage()) - 1;
+        const newPages = (this.allUrls.length === 0) ? 0 : Math.ceil(this.allUrls.length / this.howMuchJobsPerPage()) - 1;
         const pagesChanged = this.pages !== newPages;
         this.pages = newPages;
 
