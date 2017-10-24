@@ -196,16 +196,15 @@
       this.specimenHeight = this.$el.querySelector('.job.specimen').offsetHeight;
       this.specimenHidden = true;
 
-      // Wait for the element to be fully displayed
-      setTimeout(() => {
-        this.update(true);
-      }, 100);
+      setTimeout(this.update, 100); // Wait for the element to be fully displayed
       setInterval(this.update, this.config.updateInterval);
     },
 
     methods: {
 
-      async update (firstTime = false) {
+      async update () {
+        this.allJobs = [];
+
         for (const job of this.config.jobs) {
           const jobRes = await this.$http.get(this.getUrl(job), this.httpOptions);
           const body = jobRes.body;
@@ -220,23 +219,14 @@
           };
 
           if (this.config.showSuccessful || (!this.config.showSuccessful && jobObj.color !== 'blue')) {
+
             if (body.lastBuild) {
               let buildRes = await this.getBuild(body.lastBuild.url);
 
               jobObj.timeSince = this.getTimeSince(new Date(buildRes.timestamp));
             }
 
-            if (firstTime) {
-              this.allJobs.push(jobObj);
-            } else {
-              this.allJobs = this.allJobs.map((item) => {
-                if (item.id === job.id) {
-                  item = jobObj;
-                }
-
-                return item;
-              });
-            }
+            this.allJobs.push(jobObj);
           }
         }
 
@@ -246,7 +236,7 @@
 
         // Calculate the number of pages
         // Check if the number of pages has changed since the last update
-        const newPages = Math.ceil(this.allJobs.length / this.howMuchJobsPerPage()) - 1;
+        const newPages = (this.allJobs.length === 0) ? 0 : Math.ceil(this.allJobs.length / this.howMuchJobsPerPage()) - 1;
         const pagesChanged = this.pages !== newPages;
         this.pages = newPages;
 
