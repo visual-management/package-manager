@@ -1,6 +1,8 @@
 <template>
   <div class="jobs">
     <div class="everything-is-ok" :hidden="jobs.length > 0">
+      <h1 class="title">Jenkins ({{ config.jobs.length }})</h1>
+
       <img src="../assets/weather/sunny.svg" />
     </div>
 
@@ -37,13 +39,20 @@
   .everything-is-ok {
     overflow: auto;
     display: flex;
+    flex-direction: column;
     align-items: center;
     justify-content: center;
     height: 100%;
   }
 
+  .everything-is-ok > .title {
+    margin: 0;
+    text-transform: none;
+    text-align: right;
+  }
+
   .everything-is-ok > img {
-    height: 50%;
+    flex: 1;
   }
 
   .jobs {
@@ -77,7 +86,9 @@
 
   .job.blue { background-color: #8CC04F; }
   .job.yellow { background-color: #F6B44B; }
+  .job.yellow h4, .job.yellow .time-since { color: #333333; }
   .job.red { background-color: #D54C53; }
+  .job.red h4, .job.red .time-since { color: #333333; }
   .job.grey,
   .job.disabled,
   .job.aborted,
