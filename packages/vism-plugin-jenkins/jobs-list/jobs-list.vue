@@ -1,7 +1,7 @@
 <template>
   <div class="jobs">
     <div class="everything-is-ok" :hidden="jobs.length > 0">
-      <h1 class="title">Jenkins ({{ config.jobs.length }})</h1>
+      <h1 class="title">Jenkins ({{ config.jobs.length }} jobs)</h1>
 
       <img src="../assets/weather/sunny.svg" />
     </div>
