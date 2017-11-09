@@ -5,9 +5,9 @@
         <p class="name">{{ project.name }}</p>
 
         <!--<span-->
-          <!--class="counter none"-->
-          <!--:class="{ inactive: project.criticityNone === 0 }"-->
-          <!--@click="onCriticityClick(CRITICITY.NONE, project)"-->
+        <!--class="counter none"-->
+        <!--:class="{ inactive: project.criticityNone === 0 }"-->
+        <!--@click="onCriticityClick(CRITICITY.NONE, project)"-->
         <!--&gt;{{ project.criticityNone }}</span>-->
         <span
           class="counter minor"
@@ -251,9 +251,13 @@
         const scrollDistancePerAnimationFrame = Math.ceil(scrollDistancePerSecond / 60); // Animate at 60 fps.
 
         if ((el.clientHeight + el.scrollTop) === el.scrollHeight) {
-          window.requestAnimationFrame(() => this.autoScroll('up'));
+          setTimeout(() => {
+            window.requestAnimationFrame(() => this.autoScroll('up'));
+          }, 1000);
         } else if (el.scrollTop === 0) {
-          window.requestAnimationFrame(() => this.autoScroll('down'));
+          setTimeout(() => {
+            window.requestAnimationFrame(() => this.autoScroll('down'));
+          }, 1000);
         } else {
           window.requestAnimationFrame(() => this.autoScroll(direction));
         }
