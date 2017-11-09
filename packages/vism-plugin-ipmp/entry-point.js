@@ -1,4 +1,5 @@
 import Status from './status/status.vue'
+import StatusList from './status-list/status-list.vue'
 
 export default {
   id         : 'ipmp',
@@ -54,6 +55,27 @@ export default {
           {
             name: 'Evolutions',
             type: 'count_evolution'
+          }
+        ],
+        updateInterval: 60000
+      },
+      defaultWidth : 2,
+      defaultHeight: 2
+    },
+    {
+      name         : 'Status list',
+      tag          : 'status-list',
+      vue          : StatusList,
+      config       : {
+        host          : '',
+        username      : '',
+        password      : '',
+        projects      : [
+          {
+            id  : 0,
+            name: '',
+            ignoreTypes: [],
+            ignoreStatuses: []
           }
         ],
         updateInterval: 60000
