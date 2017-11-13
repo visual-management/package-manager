@@ -10,7 +10,11 @@ export default {
       tag          : 'clock',
       vue          : Clock,
       defaultWidth : 8,
-      defaultHeight: 3
+      defaultHeight: 3,
+      config       : {
+        alarmTime: '09h30',
+        youtubeId  : '3tmd-ClpJxA'
+      },
     }
   ]
 }
