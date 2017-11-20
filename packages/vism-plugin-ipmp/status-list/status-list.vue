@@ -1,7 +1,11 @@
 <template>
   <div class="container">
     <div class="list">
-      <div class="project" v-for="project in projects">
+      <div
+        class="project"
+        v-for="project in projects"
+        v-if="project.criticityMinor !== 0 || project.criticityMajor !== 0 || project.criticityBlocking !== 0"
+      >
         <p class="name">{{ project.name }}</p>
 
         <!--<span-->
@@ -83,8 +87,10 @@
 <script>
   import Vue from 'vue';
   import VueResource from 'vue-resource';
+  import AsyncComputed from 'vue-async-computed';
 
   Vue.use(VueResource);
+  Vue.use(AsyncComputed);
 
   export default {
 
@@ -100,7 +106,7 @@
 
     data () {
       return {
-        projects   : [],
+        forceUpdate: 0,
         pauseScroll: false,
         TYPE       : {
           ANOMALY  : 'Anomaly',
@@ -155,13 +161,28 @@
     },
 
     created () {
-      this.update();
-
-      setInterval(this.update.bind(this), this.config.updateInterval);
+      setInterval(() => {
+        // Value has changed, so it will refetech projects.
+        this.forceUpdate++;
+      }, this.config.updateInterval);
     },
 
     updated () {
       this.initAutoScroll();
+    },
+
+    asyncComputed: {
+
+      projects: {
+        get () {
+          return this.update();
+        },
+        watch () {
+          this.forceUpdate
+        },
+        defaults: []
+      }
+
     },
 
     methods: {
@@ -173,21 +194,16 @@
       async update () {
         const http$ = await this.$http.get(this.url, this.httpOptions);
         const tickets = http$.body.items;
+        let projects = [];
 
         for (const project of this.config.projects) {
-          const index = this.projects.findIndex((p) => p.id === project.id);
-          const item = {
+          projects.push({
             ...project,
             ...this.countCriticityForProject(project, tickets)
-          };
-
-          // Push or Update
-          if (index !== -1) {
-            this.projects[index] = item;
-          } else {
-            this.projects.push(item);
-          }
+          });
         }
+
+        return projects;
       },
 
       getTicketsForProject (tickets, projectId) {
