@@ -30,6 +30,20 @@
         >{{ project.criticityBlocking }}</span>
       </div>
     </div>
+
+    <div class="tickets-list-container" :class="{ hidden: ticketsListHidden }">
+      <ul class="tickets-list">
+        <li v-for="ticket in ticketsList">
+          <a :href="`https://ipmp.sii-ouest.fr/view/main.php?directAccess=true&objectClass=Ticket&objectId=${ticket.id}`" target="_blank">
+            #{{ ticket.id }} {{ ticket.name }}
+          </a>
+        </li>
+      </ul>
+
+      <div class="close-container">
+        <span class="close" @click="onCloseTicketsList()">Fermer</span>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -46,6 +60,35 @@
     position: absolute;
     width: 100%;
     padding: 8px;
+  }
+
+  .container .tickets-list-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    opacity: .95;
+    transition: opacity .5s;
+    background-color: #272E31;
+  }
+
+  .tickets-list-container.hidden {
+    pointer-events: none;
+    opacity: 0;
+  }
+
+  .tickets-list-container .close-container {
+    display: flex;
+    justify-content: flex-end;
+    padding: 0 8px 8px 0;
+  }
+
+  .tickets-list-container .close-container .close {
+    cursor: pointer;
   }
 
   .project {
@@ -106,20 +149,22 @@
 
     data () {
       return {
-        forceUpdate: 0,
-        pauseScroll: false,
-        TYPE       : {
+        forceUpdate      : 0,
+        pauseScroll      : false,
+        ticketsListHidden: true,
+        ticketsList      : [],
+        TYPE             : {
           ANOMALY  : 'Anomaly',
           EVOLUTION: 'Evolution',
           SUPPORT  : 'Support'
         },
-        CRITICITY  : {
+        CRITICITY        : {
           NONE    : '',
           BLOCKING: 'Bloquant',
           MAJOR   : 'Majeur',
           MINOR   : 'Mineur'
         },
-        STATUS     : {
+        STATUS           : {
           RECORDED   : 'recorded',
           QUALIFIED  : 'qualified',
           ACCEPTED   : 'accepted',
@@ -188,7 +233,17 @@
     methods: {
 
       onCriticityClick (criticity, project) {
-        console.log(`Show tickets for :: ${criticity}`, project);
+        const tickets = project.tickets.filter((ticket) => ticket.nameImpact === criticity);
+
+        console.log(`Show tickets for :: ${criticity}`, tickets);
+
+        this.ticketsListHidden = false;
+        this.ticketsList = tickets;
+      },
+
+      onCloseTicketsList () {
+        this.ticketsListHidden = true;
+        this.ticketsList = [];
       },
 
       async update () {
@@ -220,6 +275,8 @@
               ...project.ignoreStatuses.map((status) => (ticket) => ticket.nameStatus !== status)
             ])(ticket)
           ) {
+            counter.tickets.push(ticket);
+
             switch (ticket.nameImpact) {
               case this.CRITICITY.MINOR:
                 counter.criticityMinor++;
@@ -244,7 +301,8 @@
           criticityNone: 0,
           criticityMinor: 0,
           criticityMajor: 0,
-          criticityBlocking: 0
+          criticityBlocking: 0,
+          tickets: []
         });
       },
 
