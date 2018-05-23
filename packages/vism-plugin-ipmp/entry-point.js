@@ -4,7 +4,7 @@ import StatusList from './status-list/status-list.vue'
 export default {
   id         : 'ipmp',
   name       : 'iPMP',
-  description: `A set of components for iPMP`,
+  description: 'A set of components for iPMP',
   components : [
     {
       name         : 'Status',
@@ -70,11 +70,17 @@ export default {
         host          : '',
         username      : '',
         password      : '',
+        showCriticty  : {
+          none    : false,
+          minor   : true,
+          major   : true,
+          blocking: true
+        },
         projects      : [
           {
-            id  : 0,
-            name: '',
-            ignoreTypes: [],
+            id            : 0,
+            name          : '',
+            ignoreTypes   : [],
             ignoreStatuses: []
           }
         ],

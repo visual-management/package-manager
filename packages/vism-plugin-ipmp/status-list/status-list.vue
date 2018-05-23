@@ -4,37 +4,50 @@
       <div
         class="project"
         v-for="project in projects"
-        v-if="project.criticityMinor !== 0 || project.criticityMajor !== 0 || project.criticityBlocking !== 0"
+        v-if="
+          (config.showCriticty.none && project.criticityNone !== 0) ||
+          (config.showCriticty.minor && project.criticityMinor !== 0) ||
+          (config.showCriticty.major && project.criticityMajor !== 0) ||
+          (config.showCriticty.blocking && project.criticityBlocking !== 0)
+        "
       >
         <p class="name">{{ project.name }}</p>
 
-        <!--<span-->
-        <!--class="counter none"-->
-        <!--:class="{ inactive: project.criticityNone === 0 }"-->
-        <!--@click="onCriticityClick(CRITICITY.NONE, project)"-->
-        <!--&gt;{{ project.criticityNone }}</span>-->
+        <span
+          class="counter none"
+          v-if="config.showCriticty.none"
+          :class="{ inactive: project.criticityNone === 0 }"
+          @click="onCriticityClick(CRITICITY.NONE, project)"
+        >{{ project.criticityNone }}</span>
+
         <span
           class="counter minor"
+          v-if="config.showCriticty.minor"
           :class="{ inactive: project.criticityMinor === 0 }"
           @click="onCriticityClick(CRITICITY.MINOR, project)"
         >{{ project.criticityMinor }}</span>
+
         <span
           class="counter major"
+          v-if="config.showCriticty.major"
           :class="{ inactive: project.criticityMajor === 0 }"
           @click="onCriticityClick(CRITICITY.MAJOR, project)"
         >{{ project.criticityMajor }}</span>
+
         <span
           class="counter blocking"
+          v-if="config.showCriticty.blocking"
           :class="{ inactive: project.criticityBlocking === 0 }"
           @click="onCriticityClick(CRITICITY.BLOCKING, project)"
         >{{ project.criticityBlocking }}</span>
+
       </div>
     </div>
 
     <div class="tickets-list-container" :class="{ hidden: ticketsListHidden }">
       <ul class="tickets-list">
         <li v-for="ticket in ticketsList">
-          <a :href="`https://ipmp.sii-ouest.fr/view/main.php?directAccess=true&objectClass=Ticket&objectId=${ticket.id}`" target="_blank">
+          <a :href="`${config.host}/view/main.php?directAccess=true&objectClass=Ticket&objectId=${ticket.id}`" target="_blank">
             #{{ ticket.id }} {{ ticket.name }}
           </a>
         </li>
@@ -142,6 +155,12 @@
         host          : String,
         username      : String,
         password      : String,
+        showCriticty  : {
+          none    : Boolean,
+          minor   : Boolean,
+          major   : Boolean,
+          blocking: Boolean
+        },
         projects      : Array,
         updateInterval: Number
       }
@@ -209,7 +228,7 @@
       setInterval(() => {
         // Value has changed, so it will refetech projects.
         this.forceUpdate++;
-      }, this.config.updateInterval);
+    }, this.config.updateInterval);
     },
 
     updated () {
@@ -247,110 +266,110 @@
       },
 
       async update () {
-        const http$ = await this.$http.get(this.url, this.httpOptions);
-        const tickets = http$.body.items;
-        let projects = [];
+    const http$ = await this.$http.get(this.url, this.httpOptions);
+    const tickets = http$.body.items;
+    let projects = [];
 
-        for (const project of this.config.projects) {
-          projects.push({
-            ...project,
-            ...this.countCriticityForProject(project, tickets)
-          });
-        }
-
-        return projects;
-      },
-
-      getTicketsForProject (tickets, projectId) {
-        return tickets.filter((ticket) => ticket.idProject === `${projectId}`);
-      },
-
-      countCriticityForProject (project, allTickets) {
-        const tickets = this.getTicketsForProject(allTickets, project.id);
-
-        return tickets.reduce((counter, ticket) => {
-          if (
-            this.and([
-              ...project.ignoreTypes.map((type) => (ticket) => ticket.nameTicketType !== type),
-              ...project.ignoreStatuses.map((status) => (ticket) => ticket.nameStatus !== status)
-            ])(ticket)
-          ) {
-            counter.tickets.push(ticket);
-
-            switch (ticket.nameImpact) {
-              case this.CRITICITY.MINOR:
-                counter.criticityMinor++;
-                break;
-
-              case this.CRITICITY.MAJOR:
-                counter.criticityMajor++;
-                break;
-
-              case this.CRITICITY.BLOCKING:
-                counter.criticityBlocking++;
-                break;
-
-              default:
-                counter.criticityNone++;
-                break;
-            }
-          }
-
-          return counter;
-        }, {
-          criticityNone: 0,
-          criticityMinor: 0,
-          criticityMajor: 0,
-          criticityBlocking: 0,
-          tickets: []
-        });
-      },
-
-      and (predicates) {
-        return (ticket) => predicates.every(p => p(ticket));
-      },
-
-      initAutoScroll () {
-        this.$el.querySelector('.list').style.height = this.$el.clientHeight + 'px';
-
-        this.$el.addEventListener('mouseenter', () => this.pauseScroll = true);
-        this.$el.addEventListener('mouseleave', () => this.pauseScroll = false);
-
-        window.requestAnimationFrame(() => this.autoScroll('down'));
-      },
-
-      autoScroll (direction) {
-        const el = this.$el.querySelector('.list');
-        const scrollDistancePerSecond = 10; // Scroll Xpx every second.
-        const scrollDistancePerAnimationFrame = Math.ceil(scrollDistancePerSecond / 60); // Animate at 60 fps.
-
-        if ((el.clientHeight + el.scrollTop) === el.scrollHeight) {
-          setTimeout(() => {
-            window.requestAnimationFrame(() => this.autoScroll('up'));
-          }, 1000);
-        } else if (el.scrollTop === 0) {
-          setTimeout(() => {
-            window.requestAnimationFrame(() => this.autoScroll('down'));
-          }, 1000);
-        } else {
-          window.requestAnimationFrame(() => this.autoScroll(direction));
-        }
-
-        if (!this.pauseScroll) {
-          switch (direction) {
-            case 'up':
-              el.scrollTop -= scrollDistancePerAnimationFrame;
-              break;
-
-            case 'down':
-              el.scrollTop += scrollDistancePerAnimationFrame;
-              break;
-          }
-        }
-
-      }
-
+    for (const project of this.config.projects) {
+      projects.push({
+        ...project,
+        ...this.countCriticityForProject(project, tickets)
+    });
     }
+
+    return projects;
+  },
+
+  getTicketsForProject (tickets, projectId) {
+    return tickets.filter((ticket) => ticket.idProject === `${projectId}`);
+  },
+
+  countCriticityForProject (project, allTickets) {
+    const tickets = this.getTicketsForProject(allTickets, project.id);
+
+    return tickets.reduce((counter, ticket) => {
+      if (
+      this.and([
+      ...project.ignoreTypes.map((type) => (ticket) => ticket.nameTicketType !== type),
+  ...project.ignoreStatuses.map((status) => (ticket) => ticket.nameStatus !== status)
+  ])(ticket)
+  ) {
+      counter.tickets.push(ticket);
+
+      switch (ticket.nameImpact) {
+        case this.CRITICITY.MINOR:
+          counter.criticityMinor++;
+          break;
+
+        case this.CRITICITY.MAJOR:
+          counter.criticityMajor++;
+          break;
+
+        case this.CRITICITY.BLOCKING:
+          counter.criticityBlocking++;
+          break;
+
+        default:
+          counter.criticityNone++;
+          break;
+      }
+    }
+
+    return counter;
+  }, {
+      criticityNone: 0,
+        criticityMinor: 0,
+        criticityMajor: 0,
+        criticityBlocking: 0,
+        tickets: []
+    });
+  },
+
+  and (predicates) {
+    return (ticket) => predicates.every(p => p(ticket));
+  },
+
+  initAutoScroll () {
+    this.$el.querySelector('.list').style.height = this.$el.clientHeight + 'px';
+
+    this.$el.addEventListener('mouseenter', () => this.pauseScroll = true);
+    this.$el.addEventListener('mouseleave', () => this.pauseScroll = false);
+
+    window.requestAnimationFrame(() => this.autoScroll('down'));
+  },
+
+  autoScroll (direction) {
+    const el = this.$el.querySelector('.list');
+    const scrollDistancePerSecond = 10; // Scroll Xpx every second.
+    const scrollDistancePerAnimationFrame = Math.ceil(scrollDistancePerSecond / 60); // Animate at 60 fps.
+
+    if ((el.clientHeight + el.scrollTop) === el.scrollHeight) {
+      setTimeout(() => {
+        window.requestAnimationFrame(() => this.autoScroll('up'));
+    }, 1000);
+    } else if (el.scrollTop === 0) {
+      setTimeout(() => {
+        window.requestAnimationFrame(() => this.autoScroll('down'));
+    }, 1000);
+    } else {
+      window.requestAnimationFrame(() => this.autoScroll(direction));
+    }
+
+    if (!this.pauseScroll) {
+      switch (direction) {
+        case 'up':
+          el.scrollTop -= scrollDistancePerAnimationFrame;
+          break;
+
+        case 'down':
+          el.scrollTop += scrollDistancePerAnimationFrame;
+          break;
+      }
+    }
+
+  }
+
+  }
 
   }
 </script>
